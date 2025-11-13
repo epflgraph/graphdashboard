@@ -1,0 +1,15 @@
+# .gitleaks.toml
+title = "graphregistry gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignore demo/sample external keys"
+# Apply the regex to the full source line so we can key on the field name
+regexTarget = "line"
+regexes = [
+  # matches:  "external_key_en": "abc123..."
+  # tweak the value pattern to your needs
+  '''"external_key_(en|fr|de|it)"\s*:\s*"[A-Za-z0-9_-]{8,}"'''
+]
