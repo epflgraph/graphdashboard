@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    environment: "rcp-remote"
+    role: "monitor-client"
+
+scrape_configs:
+  - job_name: 'celery'
+    static_configs:
+      - targets: ['host.docker.internal:59808']
+        labels: { service: 'celery' }
+
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['host.docker.internal:55692']
+        labels: { service: 'rabbitmq' }
+
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['host.docker.internal:59417']
+        labels: { service: 'docker-stats-exporter' }
+
+  - job_name: 'gpu'
+    static_configs:
+      - targets: ['host.docker.internal:59400']
+        labels: { service: 'nvidia-gpu' }
