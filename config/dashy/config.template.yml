@@ -1,0 +1,222 @@
+pageInfo:
+  title: '> XaaS Services Dashboard'
+  description: ''
+  footerText: graphregistry-prod-xaas | SSH tunneled services
+  navLinks:
+    - title: Dashy Docs
+      path: https://dashy.to/docs
+      target: newtab
+    - title: GitHub
+      path: https://github.com/Lissy93/dashy
+      target: newtab
+  logo: /item-icons/epfl-graph-1024-1024.png
+appConfig:
+  theme: one-dark
+  layout: auto
+  iconSize: large
+  # auth:
+  #   users:
+  #     - user: johndoe
+  #       hash: <hash_here>
+  #       type: admin / normal
+  # enableGuestAccess: false
+sections:
+  - name: Graph Dashboard
+    icon: mdi-chart-line
+    items:
+      - title: Infisical
+        description: Secrets manager UI
+        icon: infisical-128x128.png
+        url: http://10.95.35.9:8648
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.95.35.9:8648
+        color: silver
+        id: 0_1434_infisical
+      - title: Grafana
+        description: Metrics & dashboards
+        icon: grafana-128x128.png
+        url: http://10.95.35.9:3000
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.95.35.9:3000
+        color: silver
+        id: 1_1434_grafana
+      - title: Prometheus
+        description: Metrics scraper
+        icon: prometheus-128x128.png
+        url: http://10.95.35.9:9090
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.95.35.9:9090
+        color: silver
+        id: 2_1434_prometheus
+      - title: Kibana
+        description: Logs, search & analytics
+        icon: kibana-128x128.png
+        url: http://10.95.35.9:5604
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.95.35.9:5601
+        color: silver
+        id: 3_1434_kibana
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 4
+      collapsed: false
+      hideForGuests: false
+  - name: Graph Search
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: GraphSearch
+        description: Production deployment
+        icon: graphsearch_prod-128x128.png
+        url: https://graphsearch.epfl.ch
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: https://graphsearch.epfl.ch
+        color: silver
+        id: 0_1128_graphsearch
+      - title: GraphSearch (test)
+        description: Test deployment
+        icon: graphsearch_test-128x128.png
+        url: https://test-graphsearch.epfl.ch
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: https://test-graphsearch.epfl.ch
+        color: silver
+        id: 1_1128_graphsearchtest
+      - title: Matomo
+        description: Web analytics for GraphSearch
+        icon: matomo-128x128.png
+        url: https://cedelogger.epfl.ch/
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: https://cedelogger.epfl.ch/
+        color: silver
+        id: 2_1128_matomo
+    icon: mdi-magnify
+  - name: Graph AI @ RCP
+    icon: mdi-fire
+    displayData:
+      sortBy: default
+      rows: 3
+      cols: 2
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: GraphAI API
+        description: Swagger docs for API endpoints
+        icon: api-128x128.png
+        color: silver
+        id: 0_1025_graphaiapi
+      - title: Redis Commander
+        description: Results backend for Celery
+        icon: redis-128x128.png
+        url: http://10.92.36.18:8081
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.92.36.18:8081
+        statusCheckAllowInsecure: true
+        color: silver
+        id: 1_1025_rediscommander
+      - title: RabbitMQ
+        description: Message broker for Celery
+        icon: rabbitmq-128x128.png
+        url: http://10.92.36.18:15672
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.92.36.18:15672
+        statusCheckAllowInsecure: true
+        color: silver
+        id: 2_1025_rabbitmq
+      - title: Flower
+        description: Task monitoring for Celery
+        icon: flower-128x128.png
+        url: http://10.92.36.18:5555
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.92.36.18:5555
+        statusCheckAllowInsecure: true
+        color: silver
+        id: 3_1025_flower
+      - title: Adminer
+        description: MySQL management
+        icon: mysql_adminer-128x128.png
+        url: http://10.92.36.18:8082
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.92.36.18:8082
+        statusCheckAllowInsecure: true
+        color: silver
+        id: 4_1025_adminer
+  - name: Graph AI - Metrics exporters
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 4
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Nvidia exporter
+        description: GPU metrics for Prometheus
+        icon: nvidia-128x128.png
+        url: http://10.92.36.18:9400/metrics
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.92.36.18:9400/metrics
+        color: silver
+        id: 0_2540_nvidiaexporter
+      - title: Docker exporter
+        description: Metrics from Docker compose
+        icon: docker-128x128.png
+        url: http://10.92.36.18:9417/metrics
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.92.36.18:9417/metrics
+        color: silver
+        id: 1_2540_dockerexporter
+      - title: Celery exporter
+        description: Metrics from Celery
+        icon: celery-128x128.png
+        url: http://10.92.36.18:9808
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.92.36.18:9808
+        color: silver
+        id: 2_2540_celeryexporter
+      - title: RabbitMQ exporter
+        description: Metrics from Celery broker
+        icon: rabbitmq-128x128.png
+        url: http://10.92.36.18:15692/metrics
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: http://10.92.36.18:15692/metrics
+        color: silver
+        id: 3_2540_rabbitmqexporter
+    icon: mdi-speedometer
+  - name: Graph Registry
+    icon: mdi-database
+    displayData:
+      sortBy: default
+      rows: 2
+      cols: 2
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: GraphRegistry API
+        description: Swagger docs for API endpoints
+        icon: api-128x128.png
+        color: silver
+        id: 0_1387_graphregistryapi
+      - title: Control Engine UI
+        description: Python user interface for core functions
+        icon: python-128x128.png
+        color: silver
+        id: 1_1387_controlengineui
