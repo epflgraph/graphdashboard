@@ -13,12 +13,12 @@ services:
     restart: unless-stopped
     ports: ["3000:3000"]
     environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USERNAME}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
     depends_on: [prometheus]
 
   kibana:
@@ -37,9 +37,9 @@ services:
     image: postgres:16
     restart: always
     environment:
-      POSTGRES_USER: infisical
-      POSTGRES_PASSWORD: infisical
-      POSTGRES_DB: infisical
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
     volumes:
       - infisical-db:/var/lib/postgresql/data
 
@@ -57,8 +57,21 @@ services:
       - postgres
       - redis
     ports:
-      - "8080:8080"
+      - "8648:8648"
     env_file: .env
+    environment:
+      DB_CONNECTION_URI: postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DATABASE}
+      INFISICAL_DISABLE_UPDATE_CHECK: true
+
+  dashy:
+    image: lissy93/dashy:latest
+    container_name: dashy
+    restart: unless-stopped
+    ports:
+      - "4000:8080"
+    volumes:
+      - ./config/dashy/config.yml:/app/user-data/conf.yml
+      - ./config/dashy/icons:/app/user-data/item-icons
 
 volumes:
   grafana_data:

@@ -210,3 +210,4 @@ __marimo__/
 .DS_Store
 .venv*
 .vscode
+config/dashy/config.yml
