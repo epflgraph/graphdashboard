@@ -211,3 +211,7 @@ __marimo__/
 .venv*
 .vscode
 config/dashy/config.yml
+env-bak
+*.env
+.data
+.certs
