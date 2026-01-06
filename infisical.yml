@@ -1,0 +1,22 @@
+# Required environment variables
+required_vars:
+
+  # Environment: Core Services
+  coresrv:
+    - ELASTICSEARCH_HOST
+    - ELASTICSEARCH_PORT
+    - MYSQL_HOST
+    - MYSQL_PORT
+
+  # Environment: Production
+  prod:
+    - DASH_HOST
+    - ELASTICSEARCH_HOST
+    - ELASTICSEARCH_PORT
+    - MYSQL_HOST
+    - MYSQL_PORT
+    - DASH_GRAFANA_ADMIN_USER
+    - DASH_GRAFANA_ADMIN_PASS
+    - DASH_KIBANA_SRVTOKEN
+    - DASH_POSTGRES_INFISICAL_USER
+    - DASH_POSTGRES_INFISICAL_PASS

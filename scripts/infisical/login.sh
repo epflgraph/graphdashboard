@@ -7,10 +7,9 @@ _is_sourced() {
   [[ "${BASH_SOURCE[0]}" != "$0" ]]
 }
 
-# Path to .env (adjust if needed)
+# Load infisical .env file
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ENV_FILE="${SCRIPT_DIR}/../../.env"
-
+ENV_FILE="${SCRIPT_DIR}/../../.infisical.env"
 if [[ ! -f "$ENV_FILE" ]]; then
   echo "[Infisical] ERROR: .env not found at $ENV_FILE"
   if _is_sourced; then
@@ -27,7 +26,7 @@ export INFISICAL_CLIENT_SECRET=$(grep -E '^INFISICAL_CLIENT_SECRET=' "$ENV_FILE"
 
 # Fallback for API URL (HTTP via nginx) if not set in .env
 if [[ -z "$INFISICAL_API_URL" ]]; then
-  INFISICAL_API_URL="http://10.95.35.9:8650/api"
+  INFISICAL_API_URL="http://0.0.0.0:8650/api"
   export INFISICAL_API_URL
 fi
 
