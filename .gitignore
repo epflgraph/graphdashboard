@@ -213,5 +213,8 @@ __marimo__/
 config/dashy/config.yml
 env-bak
 *.env
+*.env-*
 .data
 .certs
+NS_*.*
+.infisical.json
