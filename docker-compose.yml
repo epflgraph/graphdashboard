@@ -37,21 +37,6 @@ services:
       - ./config/grafana/dashboards:/var/lib/grafana/dashboards
     depends_on: [prometheus]
 
-  kibana:
-    container_name: kibana
-    image: docker.elastic.co/kibana/kibana:9.2.0
-    restart: unless-stopped
-    environment:
-      ELASTICSEARCH_HOSTS: "https://${PROD_ELASTICSEARCH_HOST}:${PROD_ELASTICSEARCH_PORT}" # "https://${10.92.36.18}:9203" # "https://10.95.35.1:9200" # 
-      ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: /usr/share/kibana/config/certs/graph-es-prod-xaas-ca.crt
-      ELASTICSEARCH_SSL_VERIFICATIONMODE: none
-      ELASTICSEARCH_SERVICEACCOUNTTOKEN: ${PROD_DASH_KIBANA_SRVTOKEN}
-      SERVER_PORT: 5604
-    ports: ["5604:5604"]
-    volumes:
-      - ./.certs:/usr/share/kibana/config/certs:ro
-      - ./.data/kibana:/usr/share/kibana/data
-
   postgres:
     container_name: infisical-postgres
     image: postgres:16
