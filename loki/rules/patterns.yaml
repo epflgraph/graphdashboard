@@ -1,0 +1,39 @@
+groups:
+  - name: example-patterns
+    interval: 1m
+    rules:
+      - record: pattern:failed_logins
+        expr: |
+          {app="auth"} 
+          | pattern `<time> <level> Failed login for user <user> from <ip>`
+  - name: nginx-patterns
+    interval: 1m
+    rules:
+      - record: pattern:nginx_access
+        expr: |
+          {job="nginx"} 
+          | pattern `<ip> - - <time> "<method> <path> <proto>" <status> <bytes>`
+  - name: error-patterns
+    interval: 1m
+    rules:
+      - record: pattern:error_contains
+        expr: |
+          {job="your_job"} 
+          |~ "ERROR|Error|error" 
+          | pattern `<rest>`
+  - name: ssh-patterns
+    interval: 1m
+    rules:
+      - record: pattern:ssh_disconnect
+        expr: |
+          {} 
+          |~ "Received disconnect from"
+          | pattern `Received disconnect from <ip> port <port>:<code>: <reason>`
+  - name: ssh-patterns-auto
+    interval: 1m
+    rules:
+      - record: pattern:ssh_disconnect_shape
+        expr: |
+          {hostname="graph-gpu1-prod-rcp"}
+          |~ "Received disconnect from"
+          | pattern `Received disconnect from <ip> port <port>:<code>: <reason>`
