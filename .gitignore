@@ -218,3 +218,4 @@ env-bak
 .certs
 NS_*.*
 .infisical.json
+graphdashboard.code-workspace
