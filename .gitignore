@@ -221,3 +221,5 @@ NS_*.*
 graphdashboard.code-workspace
 .trash
 trufflehog_scan_report.json
+nginx.graphdash-https.conf
+docker-compose.yml
