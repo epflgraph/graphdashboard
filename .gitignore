@@ -220,3 +220,4 @@ NS_*.*
 .infisical.json
 graphdashboard.code-workspace
 .trash
+trufflehog_scan_report.json
