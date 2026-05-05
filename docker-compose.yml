@@ -4,8 +4,7 @@ services:
     container_name: loki
     image: grafana/loki:3.3.2
     user: "0"
-    ports:
-      - "3100:3100"
+    restart: unless-stopped
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
@@ -17,7 +16,11 @@ services:
     image: prom/prometheus:latest
     user: "${UID}:${GID}"
     restart: unless-stopped
-    ports: ["9090:9090"]
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.external-url=https://graphdash.graphcert.cede-apps.ch:8444/prometheus/"
+      - "--web.route-prefix=/prometheus/"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./.data/prometheus:/prometheus
@@ -27,15 +30,17 @@ services:
     image: grafana/grafana:latest
     user: "${UID}:${GID}"
     restart: unless-stopped
-    ports: ["3000:3000"]
     environment:
       GF_SECURITY_ADMIN_USER: ${PROD_DASH_GRAFANA_ADMIN_USER}
       GF_SECURITY_ADMIN_PASSWORD: ${PROD_DASH_GRAFANA_ADMIN_PASS}
+      GF_SERVER_ROOT_URL: https://graphdash.graphcert.cede-apps.ch:8444/grafana/
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
     volumes:
       - ./.data/grafana:/var/lib/grafana
       - ./config/grafana/provisioning:/etc/grafana/provisioning
       - ./config/grafana/dashboards:/var/lib/grafana/dashboards
-    depends_on: [prometheus]
+    depends_on:
+      - prometheus
 
   postgres:
     container_name: infisical-postgres
@@ -65,16 +70,13 @@ services:
     depends_on:
       - postgres
       - redis
-    # Infisical listens on 8080 inside the container by default
-    ports:
-      - "8648:8080"
-    env_file: .env
+    env_file:
+      - .env
+      - .infisical.env
     environment:
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
-      AUTH_SECRET: ${AUTH_SECRET}
       DB_CONNECTION_URI: postgresql://${PROD_DASH_POSTGRES_INFISICAL_USER}:${PROD_DASH_POSTGRES_INFISICAL_PASS}@postgres:5432/infisical_db
       REDIS_URL: redis://redis:6379
-      SITE_URL: https://${DASH_HOST}:8651
+      SITE_URL: https://graphdash.graphcert.cede-apps.ch:9443
       HOST: 0.0.0.0
       PORT: 8080
       INFISICAL_DISABLE_UPDATE_CHECK: "true"
@@ -83,52 +85,31 @@ services:
     cpus: "1.0"
     pids_limit: 256
 
-  infisical-nginx:
-    image: nginx:1.27
-    container_name: infisical-nginx
-    restart: unless-stopped
-    depends_on:
-      - infisical
-    ports:
-      - "8650:80"         # VERY IMPORTANT: no TLS yet
-    volumes:
-      - ./nginx.infisical.conf:/etc/nginx/conf.d/default.conf:ro
-
-  infisical-nginx-https:
-    image: nginx:1.27
-    container_name: infisical-nginx-https
-    restart: unless-stopped
-    depends_on:
-      - infisical
-    ports:
-      - "8651:443"
-    volumes:
-      - ./nginx.infisical-https.conf:/etc/nginx/conf.d/default.conf:ro
-      - /home/dockerhost/.certs/infisical.crt:/etc/nginx/certs/infisical.crt:ro
-      - /home/dockerhost/.certs/infisical.key:/etc/nginx/certs/infisical.key:ro
-
   dashy:
     image: lissy93/dashy:latest
     container_name: dashy
     restart: unless-stopped
-    ports:
-      - "4000:8080"
     volumes:
       - ./config/dashy/config.yml:/app/user-data/conf.yml
       - ./config/dashy/icons:/app/user-data/item-icons
 
-  dashy-nginx-https:
+  reverse-proxy:
     image: nginx:1.27
-    container_name: dashy-nginx-https
+    container_name: graphdashboard-reverse-proxy
     restart: unless-stopped
     depends_on:
       - dashy
+      - grafana
+      - prometheus
+      - loki
+      - infisical
     ports:
-      - "8444:443"   # HTTPS for Dashy
+      - "8081:80"
+      - "8444:443"
+      - "9443:9443"
     volumes:
-      - ./nginx.dashy-https.conf:/etc/nginx/conf.d/default.conf:ro
-      - /home/dockerhost/.certs/infisical.crt:/etc/nginx/certs/infisical.crt:ro
-      - /home/dockerhost/.certs/infisical.key:/etc/nginx/certs/infisical.key:ro
+      - ./nginx.graphdash-https.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
 volumes:
 
