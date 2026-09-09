@@ -1,4 +1,4 @@
-<img src="assets/icon.png?v=2" alt="Project logo" height="64">
+<img src="assets/icon-e6221781.png" alt="Project logo" height="64">
 
 [![License](https://img.shields.io/github/license/epflgraph/graphdashboard)](https://github.com/epflgraph/graphdashboard/blob/master/LICENSE)
 [![Latest Release on Github](https://img.shields.io/github/v/release/epflgraph/graphdashboard?sort=semver)](https://github.com/epflgraph/graphdashboard/releases/latest)
