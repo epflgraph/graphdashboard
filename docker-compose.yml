@@ -14,7 +14,7 @@ services:
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
-    user: "${UID}:${GID}"
+    user: "${HOST_UID}:${HOST_GID}"
     restart: unless-stopped
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
@@ -28,7 +28,7 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
-    user: "${UID}:${GID}"
+    user: "${HOST_UID}:${HOST_GID}"
     restart: unless-stopped
     environment:
       GF_SECURITY_ADMIN_USER: ${PROD_DASH_GRAFANA_ADMIN_USER}
@@ -45,7 +45,7 @@ services:
   postgres:
     container_name: infisical-postgres
     image: postgres:16
-    user: "${UID}:${GID}"
+    user: "${HOST_UID}:${HOST_GID}"
     restart: always
     environment:
       POSTGRES_USER: ${PROD_DASH_POSTGRES_INFISICAL_USER}
@@ -57,7 +57,7 @@ services:
   redis:
     container_name: infisical-redis
     image: redis:7
-    user: "${UID}:${GID}"
+    user: "${HOST_UID}:${HOST_GID}"
     restart: always
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
@@ -67,6 +67,11 @@ services:
     image: infisical/infisical:latest
     container_name: infisical
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
     depends_on:
       - postgres
       - redis

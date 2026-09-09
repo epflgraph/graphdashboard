@@ -221,3 +221,4 @@ NS_*.*
 graphdashboard.code-workspace
 .trash
 trufflehog_scan_report.json
+opencode.sh
