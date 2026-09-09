@@ -1,7 +1,3 @@
-[Graph Project](https://github.com/epflgraph/graphproject) > Dash
-
----
-
 <img src="assets/icon-e6221781.png" alt="Project logo" height="64">
 
 [![License](https://img.shields.io/github/license/epflgraph/graphdashboard)](https://github.com/epflgraph/graphdashboard/blob/master/LICENSE)
@@ -11,6 +7,8 @@
 [![Last Commit](https://img.shields.io/github/last-commit/epflgraph/graphdashboard)](https://github.com/epflgraph/graphdashboard/commits/master)
 [![Open Issues](https://img.shields.io/github/issues/epflgraph/graphdashboard)](https://github.com/epflgraph/graphdashboard/issues)
 [![Open PRs](https://img.shields.io/github/issues-pr/epflgraph/graphdashboard)](https://github.com/epflgraph/graphdashboard/pulls)
+
+🏠 [Graph Project](https://github.com/epflgraph/graphproject) > Dash
 
 Why Graph?
 ==========
