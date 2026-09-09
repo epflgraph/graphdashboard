@@ -1,3 +1,8 @@
+[Graph Project](https://github.com/epflgraph/graphproject) > Dash
+
+---
+<br />
+
 <img src="assets/icon-e6221781.png" alt="Project logo" height="64">
 
 [![License](https://img.shields.io/github/license/epflgraph/graphdashboard)](https://github.com/epflgraph/graphdashboard/blob/master/LICENSE)
