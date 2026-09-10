@@ -8,27 +8,27 @@
 [![Open Issues](https://img.shields.io/github/issues/epflgraph/graphdashboard)](https://github.com/epflgraph/graphdashboard/issues)
 [![Open PRs](https://img.shields.io/github/issues-pr/epflgraph/graphdashboard)](https://github.com/epflgraph/graphdashboard/pulls)
 
-🏠 [Graph Project](https://github.com/epflgraph/graphproject) > Dash
+🏠 [Project Home](https://github.com/epflgraph/graphproject) > Dash
 
-Why Graph?
-==========
-The *Graph Data Platform* - developed by the AI engineering team at the [EPFL Center for Digital Education](https://www.epfl.ch/education/educational-initiatives/cede/) - is an open-source alternative to proprietary research information systems like Elsevier Pure. It federates educational and institutional data into a semantically interconnected knowledge graph of people, publications, labs, startups, courses, video lectures, and other educational resources. The [GraphSearch](https://graphsearch.epfl.ch/en) application provides lightning-fast search and discovery of the knowledge graph, as well as LLM-powered [chatbot](https://graphsearch.epfl.ch/en/chatbot) interaction with the indexed resources.
-
-**List of Graph services:**<br/>
+**List of core services:**<br/>
 [Registry](https://github.com/epflgraph/graphregistry) |
-[AI](https://github.com/epflgraph/graphai) |
+[AI](https://github.com/epflgraph/graphai/tree/rcp_deployment) |
 [Ontology](https://github.com/epflgraph/graphontology) |
 [Search](https://github.com/epflgraph/graphsearch_ui) |
-[Chat](https://github.com/epflgraph/graphchatbot) |
+[Chat](https://github.com/epflgraph/graphchatbot)
+
+**List of utilities:**<br/>
 Dash |
 [DB client](https://github.com/epflgraph/graphdb-client) |
 [ES client](https://github.com/epflgraph/graphes-client) |
 [SDK](https://github.com/epflgraph/graph-sdk) |
 [Agents](https://github.com/epflgraph/graphagents)
 
-Graph Dash
-==========
-*Graph Dash* (Graph Dashboard) is the monitoring and observability layer of the Graph Data Platform. It aggregates service links, metrics, logs, and secrets management behind a single nginx reverse proxy with SSL termination.
+<br />
+
+Overview
+========
+**Graph Dash** (Graph Dashboard) is the monitoring and observability layer of the Graph Data Platform. It aggregates service links, metrics, logs, and secrets management behind a single nginx reverse proxy with SSL termination.
 
 What it provides
 ----------------
