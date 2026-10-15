@@ -1,71 +1,18 @@
 services:
 
-  loki:
-    container_name: loki
-    image: grafana/loki:3.3.2
-    user: "0"
+  # Dashboard application for displaying Graph services
+  dashy:
+    image: lissy93/dashy:latest
+    container_name: graphdash-dashy
     restart: unless-stopped
-    command: -config.file=/etc/loki/local-config.yaml
     volumes:
-      - ./loki-config.yaml:/etc/loki/local-config.yaml
-      - ./.data/loki/data:/loki
-      - ./.data/loki/wal:/wal
+      - ./config/dashy/config.yml:/app/user-data/conf.yml
+      - ./config/dashy/icons:/app/user-data/item-icons
 
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:latest
-    user: "${HOST_UID}:${HOST_GID}"
-    restart: unless-stopped
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-      - "--web.external-url=https://graphdash.graphcert.cede-apps.ch:9445/"
-      - "--web.route-prefix=/"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./.data/prometheus:/prometheus
-
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:latest
-    user: "${HOST_UID}:${HOST_GID}"
-    restart: unless-stopped
-    environment:
-      GF_SECURITY_ADMIN_USER: ${PROD_DASH_GRAFANA_ADMIN_USER}
-      GF_SECURITY_ADMIN_PASSWORD: ${PROD_DASH_GRAFANA_ADMIN_PASS}
-      GF_SERVER_ROOT_URL: https://graphdash.graphcert.cede-apps.ch:9444/
-      GF_SERVER_SERVE_FROM_SUB_PATH: "false"
-    volumes:
-      - ./.data/grafana:/var/lib/grafana
-      - ./config/grafana/provisioning:/etc/grafana/provisioning
-      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
-    depends_on:
-      - prometheus
-
-  postgres:
-    container_name: infisical-postgres
-    image: postgres:16
-    user: "${HOST_UID}:${HOST_GID}"
-    restart: always
-    environment:
-      POSTGRES_USER: ${PROD_DASH_POSTGRES_INFISICAL_USER}
-      POSTGRES_PASSWORD: ${PROD_DASH_POSTGRES_INFISICAL_PASS}
-      POSTGRES_DB: infisical_db
-    volumes:
-      - infisical-db-bind:/var/lib/postgresql/data
-
-  redis:
-    container_name: infisical-redis
-    image: redis:7
-    user: "${HOST_UID}:${HOST_GID}"
-    restart: always
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - infisical-redis-bind:/data
-
+  # Infisical application for credentials managements
   infisical:
     image: infisical/infisical:latest
-    container_name: infisical
+    container_name: graphdash-infisical
     restart: always
     logging:
       driver: "json-file"
@@ -90,17 +37,78 @@ services:
     cpus: "1.0"
     pids_limit: 256
 
-  dashy:
-    image: lissy93/dashy:latest
-    container_name: dashy
+  # Grafana application for monitoring Graph services
+  grafana:
+    container_name: graphdash-grafana
+    image: grafana/grafana:latest
+    user: "${HOST_UID}:${HOST_GID}"
     restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${PROD_DASH_GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${PROD_DASH_GRAFANA_ADMIN_PASS}
+      GF_SERVER_ROOT_URL: https://graphdash.graphcert.cede-apps.ch:9444/
+      GF_SERVER_SERVE_FROM_SUB_PATH: "false"
     volumes:
-      - ./config/dashy/config.yml:/app/user-data/conf.yml
-      - ./config/dashy/icons:/app/user-data/item-icons
+      - ./.data/grafana:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
 
-  reverse-proxy:
+  # Loki service for Grafana
+  loki:
+    container_name: graphdash-loki
+    image: grafana/loki:3.3.2
+    user: "0"
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - ./.data/loki/data:/loki
+      - ./.data/loki/wal:/wal
+
+  # Prometheus service for Grafana
+  prometheus:
+    container_name: graphdash-prometheus
+    image: prom/prometheus:latest
+    user: "${HOST_UID}:${HOST_GID}"
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.external-url=https://graphdash.graphcert.cede-apps.ch:9445/"
+      - "--web.route-prefix=/"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./.data/prometheus:/prometheus
+
+  # Postgres service for Infisical
+  postgres:
+    container_name: graphdash-infisical-postgres
+    image: postgres:16
+    user: "${HOST_UID}:${HOST_GID}"
+    restart: always
+    environment:
+      POSTGRES_USER: ${PROD_DASH_POSTGRES_INFISICAL_USER}
+      POSTGRES_PASSWORD: ${PROD_DASH_POSTGRES_INFISICAL_PASS}
+      POSTGRES_DB: infisical_db
+    volumes:
+      - infisical-db-bind:/var/lib/postgresql/data
+
+  # Redis service for Infisical
+  redis:
+    container_name: graphdash-infisical-redis
+    image: redis:7
+    user: "${HOST_UID}:${HOST_GID}"
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - infisical-redis-bind:/data
+
+  # Nginx (reverse proxy for GraphDash with HTTPS)
+  nginx:
     image: nginx:1.27
-    container_name: graphdashboard-reverse-proxy
+    container_name: graphdash-nginx
     restart: unless-stopped
     depends_on:
       - dashy
@@ -117,6 +125,17 @@ services:
     volumes:
       - ./nginx.graphdash-https.conf:/etc/nginx/conf.d/default.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+
+  # Certificate watcher that reloads Nginx on certificate changes
+  cert-watcher:
+    build: ./cert-watcher
+    container_name: graphdash-cert-watcher
+    restart: unless-stopped
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NGINX_CONTAINER=graphdash-nginx
 
 volumes:
 
