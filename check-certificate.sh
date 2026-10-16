@@ -17,7 +17,9 @@ check_port() {
         cut -d= -f2-
 }
 
-dashy=$(check_port 8444)
+# Dashy is TLS-terminated by the edge reverse proxy (graphregistry-nginx)
+# on 443, which serves the same certificate for the Dashy hostname.
+dashy=$(check_port 443)
 grafana=$(check_port 9444)
 prometheus=$(check_port 9445)
 infisical=$(check_port 9446)

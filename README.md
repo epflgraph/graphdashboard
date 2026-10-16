@@ -72,11 +72,11 @@ All HTTPS endpoints are served from `graphdash.graphcert.cede-apps.ch`:
 
 | Port | Service | Upstream |
 | --- | --- | --- |
-| `8444` | Dashy | `http://dashy:8080/` |
+| `443` | Dashy | external edge reverse proxy (`graphregistry-nginx`) → `127.0.0.1:8090` → `http://dashy:8080/` |
 | `9444` | Grafana | `http://grafana:3000` |
 | `9445` | Prometheus | `http://prometheus:9090` |
 | `9446` | Infisical | `http://infisical:8080` (with websocket upgrade) |
-| `80` | Loki | `http://loki:3100/loki/` under `/loki/` |
+| `8081` | Loki | `http://loki:3100/loki/` under `/loki/` |
 
 Key configuration files
 -----------------------
@@ -84,6 +84,7 @@ Key configuration files
 - `prometheus.yml` — Prometheus scrape configuration.
 - `loki-config.yaml` — Loki server and storage configuration.
 - `nginx.graphdash-https.conf` — nginx upstream and SSL configuration.
+- `nginx.graphregistry-https.conf.copy.from.graphregistry` — local copy of the external edge reverse-proxy config; install it at `/home/dockerhost/prod/graphregistry/nginx.graphregistry-https.conf` and **restart** `graphregistry-nginx` after edits (single-file bind mount pins the inode, so `nginx -s reload` alone will not pick up changes).
 - `config/dashy/config.yml` — Dashy sections, items, auth users, and icons.
 - `config/grafana/provisioning/` — Grafana data sources and dashboard providers.
 - `config/grafana/dashboards/` — JSON dashboard definitions.

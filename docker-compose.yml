@@ -5,6 +5,8 @@ services:
     image: lissy93/dashy:latest
     container_name: graphdash-dashy
     restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:8080"   # plain HTTP for the edge reverse proxy (loopback only)
     volumes:
       - ./config/dashy/config.yml:/app/user-data/conf.yml
       - ./config/dashy/icons:/app/user-data/item-icons
@@ -118,7 +120,6 @@ services:
       - infisical
     ports:
       - "8081:80"
-      - "8444:8444"   # Dashy
       - "9444:9444"   # Grafana
       - "9445:9445"   # Prometheus
       - "9446:9446"   # Infisical
