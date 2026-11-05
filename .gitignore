@@ -224,3 +224,6 @@ trufflehog_scan_report.json
 opencode.sh
 nginx.*
 nginx.graphdash-https.conf
+
+# Local infrastructure values (real hosts/IPs) — never commit.
+/LOCAL-INFRA.md

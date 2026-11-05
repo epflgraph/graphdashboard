@@ -68,7 +68,8 @@ Compose services
 
 Public endpoints
 ----------------
-All HTTPS endpoints are served from `graphdash.graphcert.cede-apps.ch`:
+All HTTPS endpoints are served from the dashboard host — real hostname in
+`LOCAL-INFRA.md` (untracked):
 
 | Port | Service | Upstream |
 | --- | --- | --- |
@@ -133,7 +134,8 @@ docker compose exec prometheus promtool check config /etc/prometheus/prometheus.
 
 Prometheus targets
 ------------------
-Prometheus scrapes the following external targets on `10.92.36.18` every 15 seconds:
+Prometheus scrapes the following external targets on the monitoring host — real
+address in `LOCAL-INFRA.md` (untracked):
 
 | Job | Target | Purpose |
 | --- | --- | --- |

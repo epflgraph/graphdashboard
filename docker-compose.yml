@@ -34,8 +34,9 @@ services:
       HOST: 0.0.0.0
       PORT: 8080
       INFISICAL_DISABLE_UPDATE_CHECK: "true"
-    mem_limit: 768m
-    memswap_limit: 768m
+      NODE_OPTIONS: "--max-old-space-size=1024"
+    mem_limit: 1536m
+    memswap_limit: 1536m
     cpus: "1.0"
     pids_limit: 256
 
@@ -78,8 +79,12 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
-      - "--web.external-url=https://graphdash.graphcert.cede-apps.ch:9445/"
-      - "--web.route-prefix=/"
+      # Served under the /prometheus/ path of the auth-gated graphdash vhost
+      # (gateway 443 -> loopback 9445 TLS -> prometheus:9090). The real
+      # hostname comes from the gitignored .env — no infrastructure values
+      # in this tracked file.
+      - "--web.external-url=https://${DASH_HOST:?set DASH_HOST in .env}/prometheus/"
+      - "--web.route-prefix=/prometheus/"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./.data/prometheus:/prometheus
@@ -119,10 +124,10 @@ services:
       - loki
       - infisical
     ports:
-      - "8081:80"
-      - "9444:9444"   # Grafana
-      - "9445:9445"   # Prometheus
-      - "9446:9446"   # Infisical
+      - "127.0.0.1:8081:80"   # Loki — unauthenticated, loopback only
+      - "9444:9444"           # Grafana (has its own login; auth review pending)
+      - "127.0.0.1:9445:9445" # Prometheus — unauthenticated, loopback only
+      - "9446:9446"           # Infisical (has its own login; auth review pending)
     volumes:
       - ./nginx.graphdash-https.conf:/etc/nginx/conf.d/default.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
