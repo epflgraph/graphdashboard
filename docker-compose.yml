@@ -49,8 +49,11 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${PROD_DASH_GRAFANA_ADMIN_USER}
       GF_SECURITY_ADMIN_PASSWORD: ${PROD_DASH_GRAFANA_ADMIN_PASS}
-      GF_SERVER_ROOT_URL: https://graphdash.graphcert.cede-apps.ch:9444/
-      GF_SERVER_SERVE_FROM_SUB_PATH: "false"
+      # Served under the /grafana/ path of the auth-gated graphdash vhost.
+      # Real hostname comes from the gitignored .env — no infrastructure
+      # values in this tracked file.
+      GF_SERVER_ROOT_URL: https://${DASH_HOST:?set DASH_HOST in .env}/grafana/
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
     volumes:
       - ./.data/grafana:/var/lib/grafana
       - ./config/grafana/provisioning:/etc/grafana/provisioning
@@ -125,7 +128,7 @@ services:
       - infisical
     ports:
       - "127.0.0.1:8081:80"   # Loki — unauthenticated, loopback only
-      - "9444:9444"           # Grafana (has its own login; auth review pending)
+      - "127.0.0.1:9444:9444" # Grafana — loopback only (path-mounted at /grafana/; own login)
       - "127.0.0.1:9445:9445" # Prometheus — unauthenticated, loopback only
       - "9446:9446"           # Infisical (has its own login; auth review pending)
     volumes:
