@@ -128,6 +128,8 @@ services:
       - infisical
     ports:
       - "127.0.0.1:8081:80"   # Loki — unauthenticated, loopback only
+      - "172.17.0.1:8081:80"  # Loki — docker bridge gateway only (host.docker.internal pushers, e.g. graphregistry-promtail)
+      - "10.95.35.9:8081:80"  # Loki — LAN IP, push allowlisted to 10.92.36.18 in nginx (graphai promtail on RCP)
       - "127.0.0.1:9444:9444" # Grafana — loopback only (path-mounted at /grafana/; own login)
       - "127.0.0.1:9445:9445" # Prometheus — unauthenticated, loopback only
       - "9446:9446"           # Infisical (has its own login; auth review pending)
